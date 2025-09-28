@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Search</a>
+    <a href="documents.html">Documents</a>
+</nav>
+
+<h1>Your Secret Documents</h1>
+
+<!-- Login Button -->
+<div id="login-section">
+    <button id="login-btn">Login with Google</button>
+</div>
+
+<!-- Document Form -->
+<div id="doc-section" style="display:none;">
+    <textarea id="doc-content" placeholder="Write your secret notes here..." rows="10" cols="50"></textarea><br>
+    <button id="save-doc">Save Document</button>
+    <h3>Your Saved Documents:</h3>
+    <ul id="docs-list"></ul>
+</div>
+
+<script>
+// Google login
+document.getElementById('login-btn').addEventListener('click', () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then(result => {
+        const user = result.user;
+        console.log("Logged in as:", user.displayName);
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('doc-section').style.display = 'block';
+        loadDocuments(user.uid);
+    });
+});
+
+// Save document to Firestore
+document.getElementById('save-doc').addEventListener('click', async () => {
+    const content = document.getElementById('doc-content').value.trim();
+    if (!content) return alert("Document is empty!");
+    
+    const user = auth.currentUser;
+    await db.collection("documents").add({
+        uid: user.uid,
+        content: content,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById('doc-content').value = "";
+    loadDocuments(user.uid);
+});
+
+// Load documents from Firestore
+async function loadDocuments(uid) {
+    const list = document.getElementById('docs-list');
+    list.innerHTML = "";
+    const snapshot = await db.collection("documents")
+                             .where("uid", "==", uid)
+                             .orderBy("timestamp", "desc")
+                             .get();
+    snapshot.forEach(doc => {
+        const li = document.createElement('li');
+        li.textContent = doc.data().content;
+        list.appendChild(li);
+    });
+}
+</script>
+</body>
+</html>

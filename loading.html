@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading AI Hub</title>
+<style>
+  body { 
+    font-family:'Inter',sans-serif; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    height:100vh; 
+    background:#1e1e2f; 
+    color:#fff; 
+    flex-direction:column; 
+    text-align:center;
+  }
+  h1 { margin-bottom:20px; font-size:2rem; }
+  p { font-size:1.2rem; margin-bottom:20px; }
+  a { 
+    color:#00d1ff; 
+    text-decoration:none; 
+    font-weight:600; 
+    font-size:1.1rem; 
+    padding:10px 20px; 
+    border:2px solid #00d1ff; 
+    border-radius:8px; 
+    transition: all 0.3s;
+  }
+  a:hover { 
+    background:#00d1ff; 
+    color:#1e1e2f; 
+  }
+</style>
+</head>
+<body>
+<h1>Welcome! Preparing AI Hub...</h1>
+<p id="loadingText">Hello, please click below to enter AI Hub:</p>
+
+<!-- Real clickable link to ai.html -->
+<a href="ai.html">Go to AI Hub</a>
+
+<script>
+  // Optional: speak the welcome message
+  const msg = new SpeechSynthesisUtterance("Welcome to the AI Hub. Click the button below to enter.");
+  window.speechSynthesis.speak(msg);
+</script>
+</body>
+</html>
